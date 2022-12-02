@@ -41,6 +41,8 @@ if __name__ == '__main__':
     #
     img_size = 96
     datapath = './data/fingerprint_real/'
+    numpy.set_printoptions(formatter={'float': lambda x: "{0:0.3f}".format(x)})
+
     F_Left_index = cv2.imread(f'{datapath}103__F_Left_index_finger.BMP', cv2.IMREAD_GRAYSCALE)
     img_resize = cv2.resize(F_Left_index, (img_size, img_size))
     img_resize.resize(1, 96, 96, 1)
