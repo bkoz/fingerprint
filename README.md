@@ -1,6 +1,6 @@
 # Fingerprint prediction
 
-## Setup
+## Local client, model and data.
 
 ### Directory structure
 ```
@@ -16,12 +16,23 @@
 - python v3.9
 - pipenv
 
+### Install
 ```
 pipenv install
+```
+
+```
 pipenv shell
 ```
+
+### Run
 ```
 python predict.py
+```
+
+or
+```
+pipenv run python predict.py
 ```
 
 Output
