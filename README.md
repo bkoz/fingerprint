@@ -8,7 +8,8 @@
 ├── data (sample fingerprint input images)
 ├── models (ML models)
 ├── predict.py
-└── training (original ML training code)
+|── training (original ML training code)
+|── triton (model serving)
 ```
 
 ### Prerequisites
