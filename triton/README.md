@@ -59,11 +59,33 @@ curl localhost:8000/v2/models/fingerprint
 
 [JSON formatter](https://jsonformatter.org/)
 
-Inference (not working yet)
+Inference using `curl`.
 ```
 HOST=ec2-3-129-42-17.us-east-2.compute.amazonaws.com
 
-curl -X POST -H "Content-Type: application/json" -d @request-fingerprint.json $HOST:8000/v2/models/fingerprint/infer
+curl -X POST -H "Content-Type: application/json" -d @request-fingerprint.json $HOST:8000/v2/models/fingerprint/infer | jq
+```
+```
+{
+  "model_name": "fingerprint",
+  "model_version": "1",
+  "outputs": [
+    {
+      "name": "dense_5",
+      "datatype": "FP32",
+      "shape": [
+        1,
+        1
+      ],
+      "data": [
+        1
+      ]
+    }
+  ]
+}
+```
 
-{"error":"Unable to parse 'data': Shape does not match true shape of 'data' field"}
+```
+{"model_name":"fingerprint","model_version":"1","outputs":[{"name":"dense_5","datatype":"FP32","shape":[1,1],"data":[1.0]}]}
+
 ```
