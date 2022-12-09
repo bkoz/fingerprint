@@ -45,7 +45,7 @@ curl 127.0.0.1:8000/v2
 curl 127.0.0.1:8002/metrics
 ```
 
-[Triton extentsions](https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/protocol/extension_model_repository.html#index)
+[Triton extensions](https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/protocol/extension_model_repository.html#index)
 
 ```
 curl -X POST ${HOST}/v2/repository/index | jq
@@ -88,4 +88,30 @@ curl -X POST -H "Content-Type: application/json" -d @request-fingerprint.json $H
 ```
 {"model_name":"fingerprint","model_version":"1","outputs":[{"name":"dense_5","datatype":"FP32","shape":[1,1],"data":[1.0]}]}
 
+```
+
+#### Using an S3 model repo with Triton
+
+I had to use my personal AWS credentials as the Red Hat SAML creds
+would not authenticate. Make sure each artifact in the s3 
+bucket has public read permissions. When uploading a model folder to
+an s3 bucket, choose permissions and grant public read access.
+
+Set the following environment variables in the triton container:
+```
+AWS_DEFAULT_REGION
+AWS_SECRET_ACCESS_KEY
+AWS_ACCESS_KEY_ID
+```
+
+```
+podman run -it --rm --name triton -p8000:8000 -p8002:8002 nvcr.io/nvidia/tritonserver:22.11-py3 /bin/bash
+
+tritonserver --model-repository=s3://koz/models/triton --log-verbose=1
+
+I1209 21:15:53.178161 218 filesystem.cc:2272] TRITON_CLOUD_CREDENTIAL_PATH environment variable is not set, reading from environment variables
+I1209 21:15:53.178183 218 filesystem.cc:2350] Using credential    for path  s3://koz/models/triton
+...
+...
+...
 ```
