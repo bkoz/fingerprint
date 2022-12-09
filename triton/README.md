@@ -48,7 +48,7 @@ curl 127.0.0.1:8002/metrics
 [Triton extentsions](https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/protocol/extension_model_repository.html#index)
 
 ```
-curl -X POST 127.0.0.1:8000/v2/repository/index | jq
+curl -X POST ${HOST}/v2/repository/index | jq
 curl localhost:8000/v2/models/fingerprint/config
 ```
 
