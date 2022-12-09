@@ -1,24 +1,13 @@
-#
-# BEGIN: Create a request json file. Make this a separate source file.
-#
 import numpy
 import json
-from json import JSONEncoder
+import cv2
 
-class NumpyArrayEncoder(JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, numpy.ndarray):
-            return obj.tolist()
-        return JSONEncoder.default(self, obj)
+img_size = 96
+datadir = '../data/fingerprint_real'
 
-img_resize = numpy.array([[[[1], [2], [3]]]])
-
-encodedNumpyData = json.dumps(img_resize, cls=NumpyArrayEncoder)
-
-print("serialize NumPy array into JSON and write into a file")
-with open("fingerprint.json", "w") as write_file:
-    json.dump(img_resize, write_file, cls=NumpyArrayEncoder)
-print("Done writing serialized NumPy array into file")
+M_Right_index = cv2.imread(f'{datadir}/504__M_Right_index_finger.BMP', cv2.IMREAD_GRAYSCALE)
+img_resize = cv2.resize(M_Right_index, (img_size, img_size))
+img_resize.resize(1, 96, 96, 1)
 
 req = {
     "inputs": [
@@ -33,7 +22,3 @@ req = {
 
 with open('request-fingerprint.json', 'w') as convert_file:
      convert_file.write(json.dumps(req))
-
-#
-# END: Create a request json file.
-#
