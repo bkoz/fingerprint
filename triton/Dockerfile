@@ -1,4 +1,4 @@
-FROM nvcr.io/nvidia/tritonserver:22.09-py3
+FROM nvcr.io/nvidia/tritonserver:22.11-py3
 LABEL maintainer="Bob Kozdemba <bkozdemba@gmail.com>"
 
 ### Setup user for build execution and application runtime
@@ -20,5 +20,5 @@ EXPOSE 8000 8002
 
 VOLUME ${APP_ROOT}/logs ${APP_ROOT}/models
 
-CMD tritonserver --model-repository=./model_repository
+CMD tritonserver --model-repository=${MODEL_REPOSITORY}
 

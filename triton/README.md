@@ -2,6 +2,16 @@
 
 ## Notes
 
+### Openshift
+
+```
+oc new-app https://github.com/bkoz/fingerprint --context-dir=triton -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} -e MODEL_REPOSITORY=${MODEL_REPOSITORY} --dry-run=true
+```
+
+```
+oc new-app tritonserver -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} -e MODEL_REPOSITORY=${MODEL_REPOSITORY} --dry-run=false
+```
+
 ```
 podman run -it --rm --name=triton-server -p8000:8000 -p8002:8002 triton tritonserver --model-repository=./model_repository
 ```
