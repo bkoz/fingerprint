@@ -22,6 +22,12 @@ be set.
 oc new-app https://github.com/bkoz/fingerprint --context-dir=triton -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} -e MODEL_REPOSITORY=${MODEL_REPOSITORY} --dry-run=true
 ```
 
+After the pod gets deployed expose the service and set the Openshift route
+hostname to the `HOST` environment variable.
+```
+oc expose svc fingerprint
+```
+
 #### Run with podman (need to update)
 ```
 podman run -it --rm --name=triton-server -p8000:8000 -p8002:8002 triton tritonserver --model-repository=./model_repository
