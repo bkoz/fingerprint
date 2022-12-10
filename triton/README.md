@@ -5,7 +5,7 @@
 ### Openshift
 
 #### Create the Triton model server application.
-The container is large and will take several minutes to build.
+The Triton container is large and will take several minutes to build.
 
 The `AWS_DEFAULT_REGION` and s3 `MODEL_REPOSITORY`
 environment variables must be set.
