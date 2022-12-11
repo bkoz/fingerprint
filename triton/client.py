@@ -2,6 +2,7 @@
 import numpy
 import requests
 import cv2
+import ast
 
 def make_prediction(img:numpy.array, img_size:int, host:str)-> requests:
   """
@@ -36,38 +37,26 @@ host = "http://fingerprint-sandbox.apps.hou.edgelab.online"
 url = f'{host}/v2'
 r = requests.get(url)
 print(f'REST GET response = {r}')
-print(f'REST GET content = {r.content}')
+print(f'REST GET content = {r.content.decode()}')
+print()
 
 #
 # Make 4 single image predictions.
-# Refactor this into a loop.
 #
 img_size = 96
 datadir = '../data/fingerprint_real'
-F_Left_index = cv2.imread(f'{datadir}/103__F_Left_index_finger.BMP', cv2.IMREAD_GRAYSCALE)
-img_resize = cv2.resize(F_Left_index, (img_size, img_size))
-img_resize.resize(1, img_size, img_size, 1)
-r = make_prediction(img_resize, img_size, host)
-print(f'REST inference response = {r}')
-print(f'REST inference content = {r.content}')
-
-F_Left_index = cv2.imread(f'{datadir}/275__F_Left_index_finger.BMP', cv2.IMREAD_GRAYSCALE)
-img_resize = cv2.resize(F_Left_index, (img_size, img_size))
-img_resize.resize(1, img_size, img_size, 1)
-r = make_prediction(img_resize, img_size, host)
-print(f'REST inference response = {r}')
-print(f'REST inference content = {r.content}')
-
-M_Right_index = cv2.imread(f'{datadir}/232__M_Right_index_finger.BMP', cv2.IMREAD_GRAYSCALE)
-img_resize = cv2.resize(M_Right_index, (img_size, img_size))
-img_resize.resize(1, img_size, img_size, 1)
-r = make_prediction(img_resize, img_size, host)
-print(f'REST inference response = {r}')
-print(f'REST inference content = {r.content}')
-
-M_Right_index = cv2.imread(f'{datadir}/504__M_Right_index_finger.BMP', cv2.IMREAD_GRAYSCALE)
-img_resize = cv2.resize(M_Right_index, (img_size, img_size))
-img_resize.resize(1, img_size, img_size, 1)
-r = make_prediction(img_resize, img_size, host)
-print(f'REST inference response = {r}')
-print(f'REST inference content = {r.content}')
+filenames = [\
+  '103__F_Left_index_finger.BMP',\
+    '275__F_Left_index_finger.BMP',
+    '232__M_Right_index_finger.BMP',
+    '504__M_Right_index_finger.BMP'
+    ]
+for filename in filenames:
+  F_Left_index = cv2.imread(f'{datadir}/{filename}', cv2.IMREAD_GRAYSCALE)
+  img_resize = cv2.resize(F_Left_index, (img_size, img_size))
+  img_resize.resize(1, img_size, img_size, 1)
+  r = make_prediction(img_resize, img_size, host)
+  print(f'REST inference response = {r}')
+  # print(f'REST inference content = {r.content}')
+  p = ast.literal_eval(r.content.decode())
+  print(f"Image = {filename}, Prediction = {p['outputs'][0]['data']}")
