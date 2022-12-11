@@ -13,9 +13,7 @@ COPY . ${APP_ROOT}/src
 ### Containers should NOT run as root as a good practice
 USER 1001
 
-EXPOSE 8000 8002
-
-# VOLUME ${APP_ROOT}/logs ${APP_ROOT}/models
+EXPOSE 8000 8001 8002
 
 CMD tritonserver --model-repository=${MODEL_REPOSITORY}
 
