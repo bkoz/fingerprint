@@ -108,7 +108,7 @@ Inference using `curl`.
 ```
 HOST=ec2-3-129-42-17.us-east-2.compute.amazonaws.com
 
-curl -X POST -H "Content-Type: application/json" -d @request-fingerprint.json $HOST:8000/v2/models/fingerprint/infer | jq
+curl -X POST -H "Content-Type: application/json" -d @scripts/request-fingerprint.json $HOST:8000/v2/models/fingerprint/infer | jq
 ```
 ```
 {
