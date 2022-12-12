@@ -35,7 +35,7 @@ if __name__ == "__main__":
   #
   # Get the model server info.
   #
-  host = "http://fingerprint-sandbox.apps.hou.edgelab.online"
+  host = "https://fingerprint-bkoz.apps.hou.edgelab.online"
   url = f'{host}/v2'
   r = ""
   try:

@@ -24,8 +24,26 @@ oc new-app https://github.com/bkoz/fingerprint --context-dir=triton -e AWS_ACCES
 
 After the pod gets deployed, expose the service and set the Openshift route
 hostname to the `HOST` environment variable and test the server using the `curl` commands below.
+
+Create an https route.
 ```
-oc expose svc fingerprint
+oc create route edge fingerprint --service=fingerprint --port=8000
+```
+
+Or create an http route.
+```
+oc expose service fingerprint
+```
+
+Test using the python client program.
+```
+python client.py
+```
+```
+INFO:root:Fingerprint Image = 103__F_Left_index_finger.BMP, Prediction = [0.0]
+INFO:root:Fingerprint Image = 275__F_Left_index_finger.BMP, Prediction = [0.0]
+INFO:root:Fingerprint Image = 232__M_Right_index_finger.BMP, Prediction = [1.0]
+INFO:root:Fingerprint Image = 504__M_Right_index_finger.BMP, Prediction = [1.0]
 ```
 
 #### Run with podman (need to update)
