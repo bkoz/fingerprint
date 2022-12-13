@@ -1,8 +1,9 @@
 import numpy as np
 import requests
-import cv2
+# import cv2
 import ast
 import logging
+from PIL import Image
 
 def make_prediction(img:np.array, img_size:int, host:str)-> requests:
   """
@@ -59,12 +60,27 @@ if __name__ == "__main__":
     '232__M_Right_index_finger.BMP',
     '504__M_Right_index_finger.BMP'
     ]
+  import skimage
   for filename in filenames:
-    F_Left_index = cv2.imread(f'{filepath}/{filename}', cv2.IMREAD_GRAYSCALE)
-    img_resize = cv2.resize(F_Left_index, (img_size, img_size))
-    img_resize.resize(1, img_size, img_size, 1)
+    #
+    # OpenCV option
+    #
+    # F_Left_index = cv2.imread(f'{filepath}/{filename}', cv2.IMREAD_GRAYSCALE)
+    # img_resized = F_Left_index.resize((img_size, img_size))
+    # img_resized = cv2.resize(F_Left_index, (img_size, img_size))
+    # img_resized.resize(1, img_size, img_size, 1)
+
+    #
+    # skimage option
+    #
+    f = f'{filepath}/{filename}'
+    F_Left_index = skimage.io.imread(f, as_gray=True)
+    img_resized = skimage.transform.resize(F_Left_index, (96, 96))
+    
+    logging.debug(f'img_resized.shape = {img_resized.shape}')
+    
     try:
-      r = make_prediction(img_resize, img_size, host)
+      r = make_prediction(img_resized, img_size, host)
       logging.debug(f'REST inference response = {r}')
       p = ast.literal_eval(r.content.decode())
       logging.info(f"Fingerprint Image = {filename}, Prediction = {p['outputs'][0]['data']}")

@@ -8,6 +8,8 @@ numpy = "*"
 tensorflow = "*"
 opencv-python = "*"
 pillow = "*"
+awscli = "*"
+scikit-image = "*"
 
 [dev-packages]
 
