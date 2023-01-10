@@ -7,15 +7,15 @@
 #### Create the Triton model server application.
 The Triton container is large and will take several minutes to build.
 
-The `AWS_DEFAULT_REGION` and s3 `MODEL_REPOSITORY`
-environment variables must be set.
+The following environment variables must be set:
 
+- `AWS_DEFAULT_REGION` (the region containing the s3 bucket)
+- `MODEL_REPOSITORY` (.ie s3://mybucket/models/triton)
 ```
-oc new-app https://github.com/bkoz/fingerprint --context-dir=triton 
--e AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} -e MODEL_REPOSITORY=${MODEL_REPOSITORY} --dry-run=true
+oc new-app https://github.com/bkoz/fingerprint --context-dir=triton -e AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} -e MODEL_REPOSITORY=${MODEL_REPOSITORY} --dry-run=true
 ```
 
-To access an s3 bucket with authentication, additional variables must
+To access an s3 bucket with authentication, additional environment variables must
 be set.
 
 ```
@@ -30,7 +30,7 @@ Create an https route.
 oc create route edge fingerprint --service=fingerprint --port=8000
 ```
 
-Or create an http route.
+**Or** create an http route.
 ```
 oc expose service fingerprint
 ```

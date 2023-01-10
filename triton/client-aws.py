@@ -17,7 +17,7 @@ def make_prediction(img:np.array, img_size:int, host:str)-> requests:
   req2 = {
       "inputs": [
         {
-          "name": "conv2d_12_input",
+          "name": "conv2d_3_input",
           "shape": [1, img_size, img_size, 1],
           "datatype": "FP32",
           "data": img.tolist()
@@ -36,16 +36,16 @@ if __name__ == "__main__":
   #
   # Get the model server info.
   #
-  host = "https://fingerprint-bkoz.apps.hou.edgelab.online"
+  host = "https://fingerprint-models.apps.cluster-r42xb.r42xb.sandbox2309.opentlc.com"
   url = f'{host}/v2'
   r = ""
   try:
     r = requests.get(url)
-    # logging.info("")
-    # logging.info(f'Triton Server Status:')
-    # logging.info("")
-    # logging.info(f'{r.content.decode()}')
-    # logging.info("")
+    logging.info("")
+    logging.info(f'Triton Server Status:')
+    logging.info("")
+    logging.info(f'{r.content.decode()}')
+    logging.info("")
   except:
     logging.error(f"Requests Error! {r}")
 
@@ -82,6 +82,7 @@ if __name__ == "__main__":
     try:
       r = make_prediction(img_resized, img_size, host)
       logging.debug(f'REST inference response = {r}')
+      logging.debug(f'REST inference content = {r.content}')
       p = ast.literal_eval(r.content.decode())
       logging.info(f"Fingerprint Image = {filename}, Prediction = {p['outputs'][0]['data']}")
     except:
