@@ -64,7 +64,7 @@ if __name__ == "__main__":
   # Make 4 single image predictions.
   #
   img_size = 96
-  filepath = '../data/fingerprint_real'
+  filepath = 'images'
   filenames = [
     '103__F_Left_index_finger.png',
     '275__F_Left_index_finger.png',
