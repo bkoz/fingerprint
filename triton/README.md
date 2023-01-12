@@ -7,19 +7,21 @@
 #### Create the Triton model server application.
 The Triton container is large and will take several minutes to build.
 
-The following environment variables must be set:
+The following environment variables must be set to serve models
+from a public s3 bucket.
 
+- `APP_NAME=triton`
+- `MODEL_REPOSITORY` (i.e. s3://mybucket/models/triton)
 - `AWS_DEFAULT_REGION` (the region containing the s3 bucket)
-- `MODEL_REPOSITORY` (.ie s3://mybucket/models/triton)
 ```
-oc new-app https://github.com/bkoz/fingerprint --context-dir=triton -e AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} -e MODEL_REPOSITORY=${MODEL_REPOSITORY} --dry-run=true
+oc new-app --name=${APP_NAME} --context-dir=/s2i-triton --strategy docker --env=AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} --env=MODEL_REPOSITORY=${MODEL_REPOSITORY} https://github.com/codekow/s2i-patch.git
 ```
 
 To access an s3 bucket with authentication, additional environment variables must
 be set.
 
 ```
-oc new-app https://github.com/bkoz/fingerprint --context-dir=triton -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} -e MODEL_REPOSITORY=${MODEL_REPOSITORY} --dry-run=true
+oc new-app --name=${APP_NAME} --context-dir=/s2i-triton --strategy docker --env=AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} --env=AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY --env=AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} --env=MODEL_REPOSITORY=${MODEL_REPOSITORY} https://github.com/codekow/s2i-patch.git
 ```
 
 After the pod gets deployed, expose the service and set the Openshift route
@@ -27,12 +29,25 @@ hostname to the `HOST` environment variable and test the server using the `curl`
 
 Create an https route.
 ```
-oc create route edge fingerprint --service=fingerprint --port=8000
+oc create route edge ${APP_NAME} --service=${APP_NAME} --port=8000
 ```
 
 **Or** create an http route.
 ```
-oc expose service fingerprint
+oc expose service ${APP_NAME}
+```
+
+#### Testing
+
+Basic server test
+```
+export HOST=$(oc get route ${APP_NAME} --template={{.spec.host}})
+curl https://${HOST}/v2 | python -m json.tool
+```
+
+Model metadata test
+```
+curl https://${HOST}/v2/models/fingerprint | python -m json.tool
 ```
 
 Test using the python client program.
@@ -57,15 +72,7 @@ podman run -it --rm --name=triton-server -p8000:8000 -p8002:8002 triton tritonse
 +----------------------+---------+--------+
 | Model                | Version | Status |
 +----------------------+---------+--------+
-| densenet_onnx        | 1       | READY  |
 | fingerprint          | 1       | READY  |
-| inception_graphdef   | 1       | READY  |
-| simple               | 1       | READY  |
-| simple_dyna_sequence | 1       | READY  |
-| simple_identity      | 1       | READY  |
-| simple_int8          | 1       | READY  |
-| simple_sequence      | 1       | READY  |
-| simple_string        | 1       | READY  |
 +----------------------+---------+--------+
 ...
 ...
@@ -75,6 +82,7 @@ I1208 12:38:22.632686 1 http_server.cc:3474] Started HTTPService at 0.0.0.0:8000
 I1208 12:38:22.674873 1 http_server.cc:181] Started Metrics Service at 0.0.0.0:8002
 ```
 
+Model repository directory structure.
 ```
 model_repository
 └── fingerprint
@@ -135,6 +143,8 @@ curl -X POST -H "Content-Type: application/json" -d @scripts/request-fingerprint
 
 ```
 
+### Notes from podman deployment
+
 #### Using an S3 model repo with Triton
 
 I had to use my personal AWS credentials as the Red Hat SAML creds
@@ -152,7 +162,7 @@ AWS_ACCESS_KEY_ID
 ```
 podman run -it --rm --name triton -p8000:8000 -p8002:8002 nvcr.io/nvidia/tritonserver:22.11-py3 /bin/bash
 
-tritonserver --model-repository=s3://koz/models/triton --log-verbose=1
+tritonserver --model-repository=s3://mybucket/models/triton --log-verbose=1
 
 I1209 21:15:53.178161 218 filesystem.cc:2272] TRITON_CLOUD_CREDENTIAL_PATH environment variable is not set, reading from environment variables
 I1209 21:15:53.178183 218 filesystem.cc:2350] Using credential    for path  s3://koz/models/triton

@@ -1,6 +1,6 @@
 import numpy as np
 import requests
-# import cv2
+import os
 import ast
 import logging
 from PIL import Image
@@ -14,6 +14,10 @@ def make_prediction(img:np.array, img_size:int, host:str)-> requests:
    host - The hostname[:port] of the model service.
   Returns: The model output prediction.
   """
+  #
+  # Build the request payload. The "name" must match the
+  # input layer name of the model.
+  #
   req2 = {
       "inputs": [
         {
@@ -25,7 +29,7 @@ def make_prediction(img:np.array, img_size:int, host:str)-> requests:
       ]
     }
 
-  url = f'{host}/v2/models/fingerprint/infer'
+  url = f'https://{host}/v2/models/fingerprint/infer'
   r = requests.post(url, json=req2)
   return r
 
@@ -34,10 +38,17 @@ if __name__ == "__main__":
   logging.basicConfig(level=logging.INFO)
 
   #
-  # Get the model server info.
+  # Check that $HOST is set.
   #
-  host = "https://fingerprint-bkoz.apps.hou.edgelab.online"
-  url = f'{host}/v2'
+  try:
+    assert os.getenv('HOST')
+    logging.info(f"HOST = {os.getenv('HOST')}")
+  except:
+    logging.error("HOST environment variable is not set!")
+    exit()
+  
+  host = os.getenv('HOST')
+  url = f'https://{host}/v2'
   r = ""
   try:
     r = requests.get(url)
