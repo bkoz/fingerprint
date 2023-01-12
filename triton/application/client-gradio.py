@@ -44,8 +44,8 @@ def predict(image):
     resized = image.resize((96, 96)).convert('L')
     logging.debug(f"predict(): resized = {resized}")
     np_image = np.asarray(resized)
-    host = os.getenv("HOST")
-    logging.info(f"predict(): HOST = {host}")
+    host = os.getenv("INFERENCE_HOST")
+    logging.info(f"predict(): INFERENCE_HOST = {host}")
     r = make_prediction(np_image, 96, host)
     p = ast.literal_eval(r.content.decode())
     return f"Prediction = {p}"
