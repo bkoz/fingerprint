@@ -48,7 +48,14 @@ def predict(image):
     logging.info(f"predict(): INFERENCE_HOST = {host}")
     r = make_prediction(np_image, 96, host)
     p = ast.literal_eval(r.content.decode())
-    return f"Prediction = {p}"
+    logging.debug(f"predict(): outputs = {p}")
+
+    if p['outputs'][0]['data'][0] > 0.95:
+      return_string = "Right Hand"
+    else:
+        return_string = "Left Hand"
+
+    return f"Prediction = {return_string}"
 
 if __name__ == "__main__":
 
