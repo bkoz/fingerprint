@@ -66,10 +66,10 @@ if __name__ == "__main__":
   img_size = 96
   filepath = '../data/fingerprint_real'
   filenames = [
-    '103__F_Left_index_finger.BMP',
-    '275__F_Left_index_finger.BMP',
-    '232__M_Right_index_finger.BMP',
-    '504__M_Right_index_finger.BMP'
+    '103__F_Left_index_finger.png',
+    '275__F_Left_index_finger.png',
+    '232__M_Right_index_finger.png',
+    '504__M_Right_index_finger.png'
     ]
   import skimage
   for filename in filenames:
