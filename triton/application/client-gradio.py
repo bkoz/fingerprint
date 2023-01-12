@@ -60,7 +60,7 @@ if __name__ == "__main__":
           os.path.join(os.path.abspath(''), "images/275__F_Left_index_finger.png"),
           os.path.join(os.path.abspath(''), "images/232__M_Right_index_finger.png"),
           os.path.join(os.path.abspath(''), "images/504__M_Right_index_finger.png")
-          ])
+          ], title="Fingerprint Classifier")
 
   # - Set server name and port for Gradio
   GRADIO_SERVER_PORT=int(os.getenv("GRADIO_SERVER_PORT"))   # Automatically set by the Dockerfile
